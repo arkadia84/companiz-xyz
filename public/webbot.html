@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Companiz — Your CorpSec Advisor</title>
+<style>
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e94560;
+    --accent-hover: #d63851;
+    --surface: #16213e;
+    --surface-light: #0f3460;
+    --text: #eee;
+    --text-muted: #8892b0;
+    --bot-bubble: #1e2a4a;
+    --user-bubble: #e94560;
+    --bg: #0a0a1a;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--primary);
+    border-bottom: 1px solid rgba(233,69,96,0.2);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .header-info h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .header-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* ─── CHAT AREA ─── */
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  #chat::-webkit-scrollbar { width: 4px; }
+  #chat::-webkit-scrollbar-track { background: transparent; }
+  #chat::-webkit-scrollbar-thumb { background: var(--surface-light); border-radius: 4px; }
+
+  .bubble {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    line-height: 1.55;
+    font-size: 14.5px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .bot {
+    background: var(--bot-bubble);
+    border-radius: var(--radius) var(--radius) var(--radius) 4px;
+    align-self: flex-start;
+    color: var(--text);
+  }
+
+  .user {
+    background: var(--user-bubble);
+    border-radius: var(--radius) var(--radius) 4px var(--radius);
+    align-self: flex-end;
+    color: #fff;
+  }
+
+  .btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+    align-self: flex-start;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .btn {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 18px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+
+  .btn:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .typing {
+    background: var(--bot-bubble);
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    align-self: flex-start;
+    color: var(--text-muted);
+    font-size: 13px;
+    animation: fadeIn 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .typing-dots span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+  }
+
+  /* ─── INPUT AREA ─── */
+  footer {
+    padding: 14px 16px;
+    background: var(--primary);
+    border-top: 1px solid rgba(233,69,96,0.15);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #input {
+    flex: 1;
+    padding: 11px 18px;
+    border-radius: 24px;
+    border: 1px solid var(--surface-light);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14.5px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+
+  #input::placeholder { color: var(--text-muted); }
+  #input:focus { border-color: var(--accent); }
+
+  #send {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+
+  #send:hover { background: var(--accent-hover); }
+
+  /* ─── WELCOME OVERLAY ─── */
+  #welcome-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    z-index: 100;
+    text-align: center;
+    padding: 40px;
+    transition: opacity 0.3s ease;
+  }
+
+  #welcome-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .welcome-logo {
+    width: 72px;
+    height: 72px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .welcome-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .welcome-subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 360px;
+    line-height: 1.5;
+  }
+
+  #name-input {
+    padding: 12px 20px;
+    border-radius: 24px;
+    border: 1.5px solid var(--surface-light);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    font-family: inherit;
+    width: 260px;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+
+  #name-input::placeholder { color: var(--text-muted); }
+  #name-input:focus { border-color: var(--accent); }
+
+  #start-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 13px 36px;
+    border-radius: 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  #start-btn:hover { background: var(--accent-hover); }
+  #start-btn:active { transform: scale(0.97); }
+
+  /* ─── POWERED BY ─── */
+  .powered-by {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 6px 0;
+    background: var(--primary);
+    flex-shrink: 0;
+  }
+
+  .powered-by a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (min-width: 600px) {
+    body {
+      max-width: 440px;
+      margin: 0 auto;
+      border-left: 1px solid rgba(233,69,96,0.1);
+      border-right: 1px solid rgba(233,69,96,0.1);
+    }
+  }
+
+  /* ─── MARKDOWN-LITE INSIDE BUBBLES ─── */
+  .bubble b, .bubble strong { font-weight: 600; }
+  .bubble em, .bubble i { font-style: italic; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- Welcome Overlay -->
+<div id="welcome-overlay">
+  <div class="welcome-logo">C</div>
+  <div class="welcome-title">Meet your CorpSec advisor</div>
+  <div class="welcome-subtitle">
+    I'll help you pick the right company structure, match you with a vetted formation partner, and set up your financial accounts — all in about 5 minutes.
+  </div>
+  <input id="name-input" type="text" placeholder="Your first name" autocomplete="given-name"/>
+  <button id="start-btn">Get started</button>
+</div>
+
+<!-- Chat Interface -->
+<header>
+  <div class="avatar">C</div>
+  <div class="header-info">
+    <h1>Companiz</h1>
+    <p><span class="status-dot"></span> Your CorpSec advisor</p>
+  </div>
+</header>
+
+<div id="chat"></div>
+
+<footer>
+  <input id="input" placeholder="Type a message..." autocomplete="off"/>
+  <button id="send">&#10148;</button>
+</footer>
+
+<div class="powered-by">Powered by <a href="https://companiz.xyz" target="_blank">Companiz</a></div>
+
+<script>
+const API_BASE = window.location.origin;
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+const phone = 'web_' + Math.random().toString(36).slice(2, 10);
+let userName = 'there';
+
+// ─── MARKDOWN-LITE PARSER ───
+function md(text) {
+  return text
+    .replace(/\*([^*]+)\*/g, '<b>$1</b>')
+    .replace(/_([^_]+)_/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+// ─── BUBBLE HELPERS ───
+function addBubble(text, cls) {
+  const d = document.createElement('div');
+  d.className = 'bubble ' + cls;
+  if (cls === 'bot') {
+    d.innerHTML = md(text);
+  } else {
+    d.textContent = text;
+  }
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+  return d;
+}
+
+function addButtons(text, buttons) {
+  addBubble(text, 'bot');
+  const row = document.createElement('div');
+  row.className = 'btns';
+  buttons.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = b.title;
+    btn.onclick = () => {
+      // Remove all button rows once one is clicked
+      document.querySelectorAll('.btns').forEach(r => r.remove());
+      send(b.id);
+    };
+    row.appendChild(btn);
+  });
+  chat.appendChild(row);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping() {
+  const d = document.createElement('div');
+  d.className = 'typing';
+  d.id = 'typing';
+  d.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// ─── SEND MESSAGE ───
+async function send(text) {
+  const msg = text || input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addBubble(msg, 'user');
+
+  // Small delay to feel natural
+  await new Promise(r => setTimeout(r, 300));
+  addTyping();
+
+  try {
+    const res = await fetch(API_BASE + '/webchat/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, text: msg, name: userName })
+    });
+    const data = await res.json();
+
+    // Simulate typing delay proportional to message length
+    const totalLen = data.messages.reduce((s, m) => s + (m.text?.length || 0), 0);
+    const delay = Math.min(Math.max(totalLen * 4, 400), 1800);
+    await new Promise(r => setTimeout(r, delay));
+
+    document.getElementById('typing')?.remove();
+
+    data.messages.forEach(m => {
+      if (m.type === 'buttons') addButtons(m.text, m.buttons);
+      else addBubble(m.text, 'bot');
+    });
+
+    if (!data.messages.length) {
+      addBubble('(no response — please try again)', 'bot');
+    }
+  } catch (e) {
+    document.getElementById('typing')?.remove();
+    addBubble('Connection error — please refresh and try again.', 'bot');
+  }
+}
+
+// ─── INPUT HANDLERS ───
+document.getElementById('send').onclick = () => send();
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+});
+
+// ─── WELCOME FLOW ───
+const overlay = document.getElementById('welcome-overlay');
+const nameInput = document.getElementById('name-input');
+const startBtn = document.getElementById('start-btn');
+
+function startChat() {
+  const name = nameInput.value.trim();
+  if (name) userName = name;
+  overlay.classList.add('hidden');
+  setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  input.focus();
+  // Kick off the conversation
+  send('hi');
+}
+
+startBtn.onclick = startChat;
+nameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') startChat();
+});
+
+// Auto-focus name input
+nameInput.focus();
+</script>
+</body>
+</html>
