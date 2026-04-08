@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Companiz | Company Formation Guides for Global Founders</title>
+  <meta name="description" content="Guides, insights, and playbooks for non-US founders forming companies in the US, Singapore, and Hong Kong. Entity selection, financial access, and compliance." />
+  <meta property="og:title" content="Companiz Blog — Formation Guides for Global Founders" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://companiz.xyz/blog" />
+  <link rel="canonical" href="https://companiz.xyz/blog" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #080E1C;
+      color: #E2E8F0;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    :root {
+      --blue:        hsl(224, 80%, 63%);
+      --blue-deep:   hsl(224, 80%, 48%);
+      --blue-glow:   hsla(224, 80%, 63%, 0.13);
+      --blue-border: hsla(224, 80%, 63%, 0.28);
+      --surface:     #111827;
+      --surface-2:   #1A2235;
+      --surface-3:   #222E44;
+      --border:      rgba(255,255,255,0.07);
+      --text:        #E2E8F0;
+      --muted:       #94A3B8;
+      --subtle:      #64748B;
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,14,28,0.88); backdrop-filter: blur(18px);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 62px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 800; color: var(--text);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--blue); }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-link {
+      font-size: 0.85rem; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 9px;
+      font-size: 0.83rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: all 0.18s; border: none;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn:hover { border-color: var(--blue-border); color: var(--text); }
+
+    /* Hero */
+    .blog-hero {
+      padding: 80px 0 60px; text-align: center;
+    }
+    .blog-hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .blog-hero h1 em { font-style: normal; color: var(--blue); }
+    .blog-hero p {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 520px; margin: 0 auto;
+    }
+
+    /* Post grid */
+    .posts-grid {
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+      padding-bottom: 80px;
+    }
+    .post-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 26px;
+      text-decoration: none; transition: border-color 0.2s;
+      display: block;
+    }
+    .post-card:hover { border-color: var(--blue-border); }
+    .post-meta {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .post-category {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--blue);
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid var(--blue-border); background: var(--blue-glow);
+    }
+    .post-date { font-size: 0.78rem; color: var(--subtle); }
+    .post-card h2 {
+      font-size: 1.15rem; font-weight: 700; color: var(--text);
+      margin-bottom: 8px; line-height: 1.35;
+    }
+    .post-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+    .post-read {
+      display: inline-block; margin-top: 14px;
+      font-size: 0.82rem; font-weight: 600; color: var(--blue);
+    }
+
+    /* Coming soon overlay */
+    .coming-soon {
+      text-align: center; padding: 40px 0 80px;
+    }
+    .coming-soon p {
+      font-size: 0.95rem; color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .cs-tag {
+      display: inline-block;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--subtle);
+      padding: 6px 16px; border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border); padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+    }
+    .footer-logo {
+      font-size: 1.1rem; font-weight: 800;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+    .footer-logo span { color: var(--blue); }
+    .footer-note { font-size: 0.78rem; color: var(--subtle); margin-top: 4px; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a {
+      font-size: 0.8rem; color: var(--subtle);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+  </style>
+
+  <!-- Structured data for blog -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Companiz Blog",
+    "description": "Guides and insights for non-US founders forming companies abroad",
+    "url": "https://companiz.xyz/blog",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Companiz",
+      "url": "https://companiz.xyz"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Compan<span>iz</span></a>
+    <div class="nav-right">
+      <a href="/#how-it-works" class="nav-link" style="margin-right:4px">How it works</a>
+      <a href="/#entities" class="nav-link" style="margin-right:4px">Entity types</a>
+      <a href="/blog" class="nav-link" style="margin-right:16px;color:var(--text);">Blog</a>
+      <a href="/" class="btn">Take the Quiz →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="blog-hero">
+  <div class="container">
+    <h1>The <em>Companiz</em> Blog</h1>
+    <p>Guides, playbooks, and real-world insights for non-US founders building global companies.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="posts-grid">
+
+    <!-- Placeholder posts — replace with real content -->
+    <a href="#" class="post-card">
+      <div class="post-meta">
+        <span class="post-category">Formation Guide</span>
+        <span class="post-date">Coming soon</span>
+      </div>
+      <h2>Wyoming LLC vs Delaware C-Corp: Which One Is Right for Non-US Founders?</h2>
+      <p>The honest comparison nobody gives you. When Wyoming wins, when Delaware wins, and the one question that decides it for 90% of founders.</p>
+      <span class="post-read">Read more →</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-meta">
+        <span class="post-category">Financial Access</span>
+        <span class="post-date">Coming soon</span>
+      </div>
+      <h2>The Non-US Founder's Guide to Opening a US Business Account (Without Getting Rejected)</h2>
+      <p>Why 73% of non-US founders apply to the wrong institution first — and exactly which ones to approach based on your entity type and residency.</p>
+      <span class="post-read">Read more →</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-meta">
+        <span class="post-category">Playbook</span>
+        <span class="post-date">Coming soon</span>
+      </div>
+      <h2>From Bali to Wyoming: How Southeast Asian Founders Are Building US Companies Remotely</h2>
+      <p>The complete playbook for ASEAN-based founders — entity formation, EIN filing, business accounts, and annual compliance without ever visiting the US.</p>
+      <span class="post-read">Read more →</span>
+    </a>
+
+    <a href="#" class="post-card">
+      <div class="post-meta">
+        <span class="post-category">Hong Kong</span>
+        <span class="post-date">Coming soon</span>
+      </div>
+      <h2>Hong Kong Limited Company: The Best Gateway to China for Non-Chinese Founders</h2>
+      <p>Why Hong Kong beats Singapore for Greater Bay Area access, what crypto founders need to know, and the complete formation breakdown.</p>
+      <span class="post-read">Read more →</span>
+    </a>
+
+  </div>
+
+  <div class="coming-soon">
+    <p>New articles published weekly. Follow us to stay updated.</p>
+    <span class="cs-tag">More articles coming soon</span>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Compan<span>iz</span></div>
+      <div class="footer-note">Smart company formation &amp; financial access for global founders.</div>
+    </div>
+    <div class="footer-links">
+      <a href="/blog">Blog</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="mailto:hello@companiz.xyz">hello@companiz.xyz</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
