@@ -1005,8 +1005,12 @@
   // ELEPHANTS — based on RESIDENCY, not entity type
   // Excluded: US, UK, Singapore, China, Myanmar, Russia, Iran, N. Korea + OFAC
   // Source: Elephants Inc. Referral Program Guidelines & Partnership Agreement
-  function canShowElephants(residencyText) {
+  function canShowElephants(residencyText, entityType) {
     const r = (residencyText || '').toLowerCase();
+        const e = (entityType || '').toLowerCase();
+            // Elephants does not onboard US-based businesses
+                if (e.includes('wyoming') || e.includes('delaware') || e.includes('us llc')
+                    || e.includes('us c-corp') || e.includes('c-corp') || e.includes('llc')) return false;)
     // Excluded residencies per Elephants partnership agreement
     if (r.includes('united states') || r === 'usa' || r === 'us') return false;
     // "Latin America" contains "america" — must check for that separately
@@ -1102,7 +1106,7 @@
 
     // Elephants — spend management platform (NOT a bank)
     // Residency-based exclusion: US, UK, SG, CN, Myanmar + OFAC
-    if (canShowElephants(residency)) {
+    if (canShowElephants(residency, entityType)) {
       list.push({ name: 'Elephants Inc.', url: PARTNERS.elephants });
     }
 
